@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { CartPage } from './components/pages/Cart';
 import { DashboardPage } from './components/pages/Dashboard';
+import { OrderPage } from './components/pages/Order';
+import { ProductsPage } from './components/pages/Products';
 import { SignIn } from './components/pages/SignIn';
 import { SignUp } from './components/pages/SignUp';
+import { UserContextProvider } from './context/userContext';
 
 const Routes = () => {
   const history = useHistory();
@@ -10,9 +14,7 @@ const Routes = () => {
   useEffect(() => {
     if (!token) {
       history.push('/signIn');
-    } else {
-      history.push('/dashboard');
-    }
+    };
   }, [token]);
   return (
     <Switch>
@@ -20,6 +22,9 @@ const Routes = () => {
       <Route exact path="/signIn" component={SignIn} />
       <Route exact path="/signUp" component={SignUp} />
       <Route exact path="/dashboard" component={DashboardPage} />
+      <Route exact path="/products" component={ProductsPage} />
+      <Route exact path="/cart" component={CartPage} />
+      <Route exact path="/order" component={OrderPage} />
     </Switch>
   )
 };
@@ -27,9 +32,11 @@ const Routes = () => {
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes />
-      </Router>
+      <UserContextProvider>
+        <Router>
+          <Routes />
+        </Router>
+      </UserContextProvider>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Form, Input, Button, Select } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { SIGNIN_ENDPOINT } from '../../../constants/endpoints';
 const { Option } = Select;
 
 export const SignUp = () => {
@@ -9,7 +10,7 @@ export const SignUp = () => {
   const history = useHistory();
   const onFinish = (values: any) => {
     console.log('Success:', values);
-    axios.post('https://demo-api.it-shatle.by/auth/signup', {
+    axios.post(SIGNIN_ENDPOINT, {
       email: values.email,
       firstName: values.firstName,
       lastName: values.lastName,
