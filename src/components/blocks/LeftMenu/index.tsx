@@ -9,7 +9,11 @@ import { Link } from 'react-router-dom';
 
 const { Sider } = Layout;
 
-export const LeftMenu = (props: any) => {
+interface IProps {
+  collapsed: boolean;
+};
+
+export const LeftMenu = (props: IProps) => {
   return (
     <Sider trigger={null} collapsible collapsed={props.collapsed}>
       <div className="logo" />

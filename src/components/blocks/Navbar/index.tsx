@@ -8,7 +8,12 @@ import './styles.scss';
 
 const { Header } = Layout;
 
-export const Navbar = (props: any) => {
+interface IProps {
+  collapsed: boolean;
+  toggle: () => void;
+};
+
+export const Navbar = (props: IProps) => {
   const signOut = () => {
     localStorage.clear();
     window.location.reload();
