@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { getRequest } from '../../../utils';
+import { getRequest, openErrorNotification } from '../../../utils';
 import { PageWrapper } from '../../wrappers/PageWrapper';
 import { Card, Spin, Space, Pagination } from 'antd';
 import './styles.scss';
@@ -27,7 +27,7 @@ export const ProductsPage = () => {
     const query = pageInfo ? `?page=${pageInfo?.pageIndex}&limit=${pageInfo?.pageSize}` : '';
     getRequest(`${PRODUCTS_ENDPOINT}${query}`)
       .then(res => setProducts(res.data))
-      .catch(err => console.log(err));
+      .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
   };
   useEffect(() => getProducts(), []);
   return (

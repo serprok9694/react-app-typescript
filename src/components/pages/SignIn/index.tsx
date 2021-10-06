@@ -3,6 +3,8 @@ import { Form, Input, Button } from 'antd';
 import { Link, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import { SIGNIN_ENDPOINT } from '../../../constants/endpoints';
+import { openErrorNotification } from '../../../utils';
+import './styles.scss';
 
 export const SignIn = () => {
   const history = useHistory();
@@ -20,7 +22,7 @@ export const SignIn = () => {
           history.push('/dashboard');
         }
       })
-      .catch(err => console.log('Error: ', err));
+      .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -28,32 +30,34 @@ export const SignIn = () => {
   };
 
   return (
-    <div className="sign-in-page">
-      <Form
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+    <div className="container">
+      <div className="sign-in-page">
+        <Form
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">Submit</Button>
-        </Form.Item>
-        <Link to="/signUp">Go to Sign up</Link>
-      </Form>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit">Submit</Button>
+          </Form.Item>
+          <Link to="/signUp">Go to Sign up</Link>
+        </Form>
+      </div>
     </div>
   );
 };

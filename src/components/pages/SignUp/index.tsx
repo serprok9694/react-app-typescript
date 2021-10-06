@@ -3,6 +3,8 @@ import { Form, Input, Button, Select } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { SIGNIN_ENDPOINT } from '../../../constants/endpoints';
+import { openErrorNotification } from '../../../utils';
+import './styles.scss';
 const { Option } = Select;
 
 export const SignUp = () => {
@@ -23,7 +25,7 @@ export const SignUp = () => {
         console.log('Response: ', response);
         if (response.status === 201) history.push('/signIn');
       })
-      .catch(err => console.log('Error: ', err));
+      .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -44,64 +46,66 @@ export const SignUp = () => {
   };
 
   return (
-    <div className="sign-up-page">
-      <Form
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[{ required: true, message: 'Please input your First Name!' }]}
+    <div className="container">
+      <div className="sign-up-page">
+        <Form
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Last Name"
-          name="lastName"
-          rules={[{ required: true, message: 'Please input your Last Name!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-          <Select
-            placeholder="Select a option and change input text above"
-            onChange={onGenderChange}
-            allowClear
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[{ required: true, message: 'Please input your First Name!' }]}
           >
-            <Option value="male">male</Option>
-            <Option value="female">female</Option>
-            <Option value="other">other</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label="Phone"
-          name="phone"
-          rules={[{ required: true, message: 'Please input your phone!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">Submit</Button>
-        </Form.Item>
-        <Link to="/signIn">Go to Sign in</Link>
-      </Form>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="lastName"
+            rules={[{ required: true, message: 'Please input your Last Name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+            <Select
+              placeholder="Select a option and change input text above"
+              onChange={onGenderChange}
+              allowClear
+            >
+              <Option value="male">male</Option>
+              <Option value="female">female</Option>
+              <Option value="other">other</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Phone"
+            name="phone"
+            rules={[{ required: true, message: 'Please input your phone!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit">Submit</Button>
+          </Form.Item>
+          <Link to="/signIn">Go to Sign in</Link>
+        </Form>
+      </div>
     </div>
   )
 };
