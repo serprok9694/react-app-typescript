@@ -1,9 +1,7 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getRequest, openErrorNotification } from '../../../utils';
 import { PageWrapper } from '../../wrappers/PageWrapper';
-import { Card, Spin, Space, Pagination } from 'antd';
+import { Card, Spin, Space, Pagination, Input } from 'antd';
 import './styles.scss';
 import { PRODUCTS_ENDPOINT } from '../../../constants/endpoints';
 import { useHistory } from 'react-router-dom';
@@ -18,7 +16,11 @@ export interface IProduct {
 
 export const ProductsPage = () => {
   const history = useHistory();
+  const [searchNameValue, setSearchNameValue] = useState<string>("");
+  const [searchPriceValue, setSearchPriceValue] = useState<string>("");
   const [products, setProducts] = useState<IProduct[] | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[] | null>(null);
+  const items = filteredProducts !== null ? filteredProducts : products;
   const onChangePagination = (pageIndex: number, pageSize?: number) => {
     setProducts(null);
     getProducts({ pageIndex, pageSize });
@@ -30,6 +32,11 @@ export const ProductsPage = () => {
       .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
   };
   useEffect(() => getProducts(), []);
+  useEffect(() => {
+    const filteredProducts = products?.filter(product => product.name.includes(searchNameValue) && String(product.price).includes(searchPriceValue));
+    filteredProducts && setFilteredProducts(filteredProducts);
+  }, [searchNameValue, searchPriceValue]);
+  
   return (
     <PageWrapper>
       <div className="products-page">
@@ -38,9 +45,13 @@ export const ProductsPage = () => {
           <div>Total: {products?.length}</div>
           <Pagination onChange={onChangePagination} total={300} />
         </div>
+        <div>
+          <Input value={searchNameValue} onChange={e => setSearchNameValue(e.target.value)} placeholder="Name" />
+          <Input value={searchPriceValue} onChange={e => setSearchPriceValue(e.target.value)} placeholder="Price" />
+        </div>
         <div className="products-page__list">
-          {products === null ? <Space size="middle"><Spin size="large" /></Space> : (
-            products.map((product: IProduct) => (
+          {items === null ? <Space size="middle"><Spin size="large" /></Space> : (
+            items.length ? items.map((product: IProduct) => (
               <Card
                 key={product.id}
                 hoverable
@@ -49,7 +60,7 @@ export const ProductsPage = () => {
               >
                 <Meta title={product.name} description={`Price: $${product.price}`} />
               </Card>
-            ))
+            )) : <div>Нет данных</div>
           )}
         </div>
       </div>
