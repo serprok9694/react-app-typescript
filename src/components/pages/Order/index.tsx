@@ -10,7 +10,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/userContext';
 
-interface IOrderItemsList {
+export interface IOrderItemsList {
   id: number;
   name: string;
   image: string;
@@ -18,7 +18,7 @@ interface IOrderItemsList {
   price: number;
 };
 
-interface IOrder {
+export interface IOrder {
   id: string;
   customerId: string;
   totalPrice: number;
@@ -45,6 +45,7 @@ export const OrderPage = () => {
   };
   useEffect(() => {
     getOrdersList();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <PageWrapper>
@@ -119,7 +120,7 @@ export const OrderPage = () => {
                 <div style={{ margin: 0 }}>
                   {record.itemsList.map(item => (
                     <div key={item.id}>
-                      <img src={item.image} alt="image" width="100" height="100" />
+                      <img src={item.image} alt="test" width="100" height="100" />
                       {item.name} - {item.quantity} ${item.price}
                     </div>
                   ))}

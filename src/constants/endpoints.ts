@@ -4,3 +4,4 @@ export const SIGNIN_ENDPOINT = `${BASE_URL}/auth/signIn`;
 export const SIGNUP_ENDPOINT = `${BASE_URL}/auth/signup`;
 export const PRODUCTS_ENDPOINT = `${BASE_URL}/products`;
 export const ORDER_ENDPOINT = `${BASE_URL}/order`;
+export const CART_ENDPOINT = `${BASE_URL}/cart`;

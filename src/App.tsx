@@ -16,6 +16,7 @@ const Routes = () => {
     if (!token) {
       history.push('/signIn');
     };
+		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   return (
     <Switch>

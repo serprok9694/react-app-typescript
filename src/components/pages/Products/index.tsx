@@ -31,10 +31,14 @@ export const ProductsPage = () => {
       .then(res => setProducts(res.data))
       .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
   };
-  useEffect(() => getProducts(), []);
+  useEffect(() => {
+    getProducts();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     const filteredProducts = products?.filter(product => product.name.includes(searchNameValue) && String(product.price).includes(searchPriceValue));
     filteredProducts && setFilteredProducts(filteredProducts);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchNameValue, searchPriceValue]);
   
   return (
