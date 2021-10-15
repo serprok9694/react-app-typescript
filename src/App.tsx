@@ -4,7 +4,7 @@ import { CartPage } from './components/pages/Cart';
 import { DashboardPage } from './components/pages/Dashboard';
 import { OrderPage } from './components/pages/Order';
 import { ProductPage } from './components/pages/Product';
-import { ProductsPage } from './components/pages/Products';
+import ProductsPage from './components/pages/Products';
 import { SignIn } from './components/pages/SignIn';
 import { SignUp } from './components/pages/SignUp';
 import { UserContextProvider } from './context/userContext';

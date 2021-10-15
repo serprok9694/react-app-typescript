@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getRequest, openErrorNotification } from '../../../utils';
 import { PageWrapper } from '../../wrappers/PageWrapper';
 import { Card, Spin, Space, Pagination, Input } from 'antd';
 import './styles.scss';
-import { PRODUCTS_ENDPOINT } from '../../../constants/endpoints';
 import { useHistory } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
+import { getProductsRequestAction } from '../../../actions/products';
 const { Meta } = Card;
 
 export interface IProduct {
@@ -14,30 +14,27 @@ export interface IProduct {
   price: number;
 };
 
-export const ProductsPage = () => {
+const ProductsPage = (props: any) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const [searchNameValue, setSearchNameValue] = useState<string>("");
   const [searchPriceValue, setSearchPriceValue] = useState<string>("");
-  const [products, setProducts] = useState<IProduct[] | null>(null);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[] | null>(null);
-  const items = filteredProducts !== null ? filteredProducts : products;
+  const items = filteredProducts !== null ? filteredProducts : props.products;
   const onChangePagination = (pageIndex: number, pageSize?: number) => {
-    setProducts(null);
-    getProducts({ pageIndex, pageSize });
-  };
-  const getProducts = (pageInfo?: { pageIndex: number; pageSize?: number }) => {
-    const query = pageInfo ? `?page=${pageInfo?.pageIndex}&limit=${pageInfo?.pageSize}` : '';
-    getRequest(`${PRODUCTS_ENDPOINT}${query}`)
-      .then(res => setProducts(res.data))
-      .catch(err => openErrorNotification(err.response.data.error, err.response.data.message));
+    dispatch(getProductsRequestAction({ pageIndex, pageSize }));
   };
   useEffect(() => {
-    getProducts();
+    dispatch(getProductsRequestAction());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    const filteredProducts = products?.filter(product => product.name.includes(searchNameValue) && String(product.price).includes(searchPriceValue));
-    filteredProducts && setFilteredProducts(filteredProducts);
+    if (!searchNameValue.length && !searchPriceValue.length) {
+      setFilteredProducts(null);
+    } else {
+      const filteredProducts = props.products?.filter((product: IProduct) => product.name.includes(searchNameValue) && String(product.price).includes(searchPriceValue));
+      filteredProducts && setFilteredProducts(filteredProducts);
+    };
 		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchNameValue, searchPriceValue]);
   
@@ -46,7 +43,7 @@ export const ProductsPage = () => {
       <div className="products-page">
         <h1>Products</h1>
         <div className="products-page__total">
-          <div>Total: {products?.length}</div>
+          <div>Total: {props.products?.length}</div>
           <Pagination onChange={onChangePagination} total={300} />
         </div>
         <div>
@@ -54,7 +51,7 @@ export const ProductsPage = () => {
           <Input value={searchPriceValue} onChange={e => setSearchPriceValue(e.target.value)} placeholder="Price" />
         </div>
         <div className="products-page__list">
-          {items === null ? <Space size="middle"><Spin size="large" /></Space> : (
+          {props.isLoading ? <Space size="middle"><Spin size="large" /></Space> : (
             items.length ? items.map((product: IProduct) => (
               <Card
                 key={product.id}
@@ -71,3 +68,10 @@ export const ProductsPage = () => {
     </PageWrapper>
   );
 };
+
+const mapStateToProps = (state: any) => ({
+  products: state.products.data,
+  isLoading: state.products.request.status === 'pending' ? true : false,
+});
+
+export default connect(mapStateToProps, null)(ProductsPage);
